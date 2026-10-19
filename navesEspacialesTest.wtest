@@ -1,5 +1,22 @@
 import naves.*
 
+describe "Nave de carga de residuos" {
+  test "al recibir una amenaza frenan pero su carga sigue siendo la misma." {
+	const nave = new NaveDeCargaDeResiduos(carga = 5000, velocidad = 10000, cerradoAlVacio = true)
+		nave.recibirAmenaza()
+		assert.equals(0, nave.velocidad())
+		assert.equals(5000, nave.carga())
+  }
+  test "nave de residuos queda a 15000 y cerrada al vacio" {
+		const nave = new NaveDeCargaDeResiduos()
+		nave.prepararViaje()
+		assert.equals(15000, nave.velocidad())
+		assert.that(nave.cerradoAlVacio())
+	}
+}
+
+
+
 describe "Nave de carga" {
 
 	const naveVacia = new NaveDeCarga()
@@ -36,6 +53,12 @@ describe "Nave de carga" {
 		naveLlena.acercamientoDeControl()
 		assert.equals(100, naveLlena.carga())
 	}
+	test "nave de carga sin velocidad al propulsarse queda con una velocidad de 20.000 kms/seg" {
+	  const nave = new NaveDeCarga()
+	  nave.propulsar()
+	  assert.equals(20000, nave.velocidad())
+	}
+
 
 }
 
@@ -63,6 +86,22 @@ describe "Nave de pasajeros" {
 	test "recibir amenaza" {
 		naveSinPasajeros.recibirAmenaza()
 		assert.that(naveSinPasajeros.alarma())
+	}
+	test "nave de pasajeros que viaja a 290.000 kms/seg al propulsarse queda viajando a 300.000 kms/seg." {
+	  const nave = new NaveDePasajeros(velocidad = 290000)
+	  nave.propulsar()
+	  assert.equals(300000, nave.velocidad())
+	}
+	test "nave de pasajeros a 290000 queda en 300000" {
+		const nave = new NaveDePasajeros(velocidad = 290000)
+		nave.prepararViaje()
+		assert.equals(300000, nave.velocidad())
+	}
+	test "nave de pasajeros sin velocidad al encontrarse con un enemigo queda con velocidad de 20.000 kms/seg y su alarma en caso de emergencia activada." {
+		const nave = new NaveDePasajeros()
+		nave.enfrentarEnemigo()
+		assert.equals(20000, nave.velocidad())
+		assert.that(nave.alarma())
 	}
 
 }
@@ -93,5 +132,18 @@ describe "Nave de combate" {
 	test "recibir amenaza en ataque" {
 		naveEnAtaque.recibirAmenaza()
 		assert.equals("Enemigo encontrado", naveEnAtaque.ultimoMensaje())
+	}
+	test "nave de combate en ataque emite Volviendo a la base" {
+		const nave = new NaveDeCombate(modo = ataque)
+		nave.prepararViaje()
+		assert.equals("Volviendo a la base", nave.ultimoMensaje())
+		assert.equals(15000, nave.velocidad())
+	}
+	test "nave de combate en reposo emite Saliendo en mision y pasa a ataque" {
+		const nave = new NaveDeCombate(modo = reposo)
+		nave.prepararViaje()
+		assert.equals("Saliendo en misión", nave.ultimoMensaje())
+		assert.equals(ataque, nave.modo())
+		assert.equals(15000, nave.velocidad())
 	}
 }
