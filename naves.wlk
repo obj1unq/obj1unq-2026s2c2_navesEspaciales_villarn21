@@ -5,7 +5,7 @@ class Nave{
 		self.aumentarVelocidad(20000)
 	}
 	method aumentarVelocidad(aumento){
-		velocidad = (velocidad + aumento).min(3000000)
+		velocidad = (velocidad + aumento).min(300000)
 	}
 	method prepararViaje(){
 		self.aumentarVelocidad(15000)
